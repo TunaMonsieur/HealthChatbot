@@ -1,0 +1,23 @@
+version: '3.8'
+
+# Development setup - with hot reload
+services:
+  healthchatbot:
+    build: .
+    container_name: health-chatbot-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    env_file:
+      - .env
+    volumes:
+      # Mount source code for hot reload
+      - ./deploy.py:/app/deploy.py
+      - ./retrieval_bidirectional.py:/app/retrieval_bidirectional.py
+      # Mount data files
+      - ./embeddings.npy:/app/embeddings.npy
+      - ./faiss.index:/app/faiss.index
+      - ./documents.pkl:/app/documents.pkl
+    command: uvicorn deploy:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped

@@ -1,0 +1,18 @@
+# Core
+numpy
+pandas
+
+# Embedding & Reranking
+sentence-transformers
+faiss-cpu
+
+# LLM API
+google-generativeai
+
+# API service
+fastapi
+uvicorn
+
+# Utils
+python-dotenv
+requests

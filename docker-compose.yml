@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  healthchatbot:
+    build: .
+    container_name: health-chatbot
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    env_file:
+      - .env
+    volumes:
+      # Mount data files (nếu muốn update mà không rebuild)
+      - ./embeddings.npy:/app/embeddings.npy
+      - ./faiss.index:/app/faiss.index
+      - ./documents.pkl:/app/documents.pkl
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: health-chatbot-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - healthchatbot
+    restart: unless-stopped
