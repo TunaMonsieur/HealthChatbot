@@ -4,7 +4,7 @@ Quick RAG Evaluation Demo - Small Sample
 
 import numpy as np
 import pandas as pd
-from retrieval import load_assets, load_models, search
+from retrieval_bidirectional import load_assets, load_models, search
 
 # Load test data
 print("📂 Loading test data...")
